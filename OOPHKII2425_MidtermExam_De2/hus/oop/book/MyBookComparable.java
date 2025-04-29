@@ -1,5 +1,5 @@
-//package hus.oop.book;
-//
-//public interface MyBookComparable {
-//    int compareTo(Book another);
-//}
+package hus.oop.book;
+
+public interface MyBookComparable {
+    int compareTo(Book another);
+}
