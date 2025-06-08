@@ -1,5 +1,8 @@
 package hus.oop.matrix;
 
+import java.util.Arrays;
+import java.util.Random;
+
 public class MySquareMatrix {
     private int[][] data;
 
@@ -16,7 +19,13 @@ public class MySquareMatrix {
      * @param size
      */
     private void initRandom(int size) {
-        /* TODO */
+        Random rand = new Random();
+        data = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                data[i][j] = rand.nextInt(81) + 10;
+            }
+        }
     }
 
     /**
@@ -24,7 +33,12 @@ public class MySquareMatrix {
      * @return đường chéo chính của ma trận.
      */
     public int[] principalDiagonal() {
-        /* TODO */
+        int n = data.length;
+        int[] diagonal = new int[n];
+        for (int i = 0; i < n; i++) {
+            diagonal[i] = data[i][i];
+        }
+        return diagonal;
     }
 
     /**
@@ -32,7 +46,12 @@ public class MySquareMatrix {
      * @return đường chéo phụ của ma trận.
      */
     public int[] secondaryDiagonal() {
-        /* TODO */
+        int n = data.length;
+        int[] diagonal = new int[n];
+        for (int i = 0; i < n; i++) {
+            diagonal[i] = data[i][n - 1 - i];
+        }
+        return diagonal;
     }
 
     /**
@@ -40,7 +59,36 @@ public class MySquareMatrix {
      * @return các số nguyên tố trong ma trận.
      */
     public int[] primes() {
-        /* TODO */
+        int n = data.length;
+        int count = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (isPrime(data[i][j])) {
+                    count++;
+                }
+            }
+        }
+
+        int[] primes = new int[count];
+        int index = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (isPrime(data[i][j])) {
+                    primes[index++] = data[i][j];
+                }
+            }
+        }
+
+        return primes;
+    }
+
+    private boolean isPrime(int num) {
+        if (num <= 1) return false;
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) return false;
+        }
+        return true;
     }
 
     /**
@@ -49,7 +97,32 @@ public class MySquareMatrix {
      * Các phần tử được sắp xếp theo thứ tự từ trái sang phải ở mỗi hàng, và từ trên xuống dưới.
      */
     public MySquareMatrix getSortedMatrix() {
-        /* TODO */
+        int n = data.length;
+        int[] allElements = new int[n * n];
+
+        int index = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                allElements[index++] = data[i][j];
+            }
+        }
+
+        Arrays.sort(allElements);
+        for (int i = 0; i < allElements.length / 2; i++) {
+            int temp = allElements[i];
+            allElements[i] = allElements[allElements.length - 1 - i];
+            allElements[allElements.length - 1 - i] = temp;
+        }
+
+        MySquareMatrix sortedMatrix = new MySquareMatrix(n);
+        index = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                sortedMatrix.set(i, j, allElements[index++]);
+            }
+        }
+
+        return sortedMatrix;
     }
 
     /**
@@ -59,7 +132,7 @@ public class MySquareMatrix {
      * @return
      */
     public int get(int row, int col) {
-        /* TODO */
+        return data[row][col];
     }
 
     /**
@@ -69,7 +142,7 @@ public class MySquareMatrix {
      * @param value
      */
     public void set(int row, int col, int value) {
-        /* TODO */
+        data[row][col] = value;
     }
 
     /**
@@ -78,7 +151,14 @@ public class MySquareMatrix {
      * @return ma trận mới là ma trận tổng của 2 ma trận.
      */
     public MySquareMatrix add(MySquareMatrix that) {
-        /* TODO */
+        int n = this.data.length;
+        MySquareMatrix result = new MySquareMatrix(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                result.set(i, j, this.data[i][j] + that.data[i][j]);
+            }
+        }
+        return result;
     }
 
     /**
@@ -87,7 +167,14 @@ public class MySquareMatrix {
      * @return ma trận mới là ma trận hiệu của ma trận hiện tại và ma trận truyền vào.
      */
     public MySquareMatrix minus(MySquareMatrix that) {
-        /* TODO */
+        int n = this.data.length;
+        MySquareMatrix result = new MySquareMatrix(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                result.set(i, j, this.data[i][j] - that.data[i][j]);
+            }
+        }
+        return result;
     }
 
     /**
@@ -96,7 +183,18 @@ public class MySquareMatrix {
      * @return ma trận mới là ma trận nhân của ma trận hiện tại với ma trận truyền vào.
      */
     public MySquareMatrix multiply(MySquareMatrix that) {
-        /* TODO */
+        int n = this.data.length;
+        MySquareMatrix result = new MySquareMatrix(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                int sum = 0;
+                for (int k = 0; k < n; k++) {
+                    sum += this.data[i][k] * that.data[k][j];
+                }
+                result.set(i, j, sum);
+            }
+        }
+        return result;
     }
 
     /**
@@ -105,7 +203,14 @@ public class MySquareMatrix {
      * @return ma trận mới là ma trận hiện tại được nhân với một số vô hướng.
      */
     public MySquareMatrix scaled(int value) {
-        /* TODO */
+        int n = this.data.length;
+        MySquareMatrix result = new MySquareMatrix(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                result.set(i, j, this.data[i][j] * value);
+            }
+        }
+        return result;
     }
 
     /**
@@ -113,7 +218,14 @@ public class MySquareMatrix {
      * @return ma trận mới là ma trận chuyển vị của ma trận hiện tại.
      */
     public MySquareMatrix transpose() {
-        /* TODO */
+        int n = this.data.length;
+        MySquareMatrix result = new MySquareMatrix(n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                result.set(j, i, this.data[i][j]);
+            }
+        }
+        return result;
     }
 
     /**
@@ -125,6 +237,13 @@ public class MySquareMatrix {
      */
     @Override
     public String toString() {
-        /* TODO */
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[i].length; j++) {
+                sb.append(data[i][j]).append(" ");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }
