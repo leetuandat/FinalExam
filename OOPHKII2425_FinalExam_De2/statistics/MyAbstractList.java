@@ -7,6 +7,18 @@ public abstract class MyAbstractList implements MyList {
      */
     @Override
     public String toString() {
-        /* TODO */
+        StringBuilder sb = new StringBuilder();
+        MyIterator iterator = iterator(0);
+
+        sb.append("[");
+        while (iterator.hasNext()) {
+            sb.append(iterator.next());
+            if (iterator.hasNext()) {
+                sb.append(" ");
+            }
+        }
+        sb.append("]");
+
+        return sb.toString();
     }
 }

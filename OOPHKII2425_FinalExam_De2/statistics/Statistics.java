@@ -1,5 +1,7 @@
 package hus.oop.statistics;
 
+import java.util.Arrays;
+
 public class Statistics {
     private MyList data;
 
@@ -7,7 +9,7 @@ public class Statistics {
      * Khởi tạo dữ liệu cho BasicStatistic.
      */
     public Statistics(MyList data) {
-        /* TODO */
+        this.data = data;
     }
 
     /**
@@ -15,7 +17,15 @@ public class Statistics {
      * @return giá trị lớn nhất.
      */
     public double max() {
-        /* TODO */
+        double max = Double.NEGATIVE_INFINITY;
+        MyIterator iterator = data.iterator(0);
+        while (iterator.hasNext()) {
+            double value = iterator.next().doubleValue();
+            if (value > max) {
+                max = value;
+            }
+        }
+        return max;
     }
 
     /**
@@ -23,7 +33,15 @@ public class Statistics {
      * @return giá trị nhỏ nhất.
      */
     public double min() {
-        /* TODO */
+        double min = Double.POSITIVE_INFINITY;
+        MyIterator iterator = data.iterator(0);
+        while (iterator.hasNext()) {
+            double value = iterator.next().doubleValue();
+            if (value < min) {
+                min = value;
+            }
+        }
+        return min;
     }
 
     /**
@@ -31,7 +49,14 @@ public class Statistics {
      * @return kỳ vọng.
      */
     public double mean() {
-        /* TODO */
+        double sum = 0;
+        int count = 0;
+        MyIterator iterator = data.iterator(0);
+        while (iterator.hasNext()) {
+            sum += iterator.next().doubleValue();
+            count++;
+        }
+        return sum / count;
     }
 
     /**
@@ -39,7 +64,16 @@ public class Statistics {
      * @return phương sai.
      */
     public double variance() {
-        /* TODO */
+        double mean = mean();
+        double sumSquaredDifferences = 0;
+        int count = 0;
+        MyIterator iterator = data.iterator(0);
+        while (iterator.hasNext()) {
+            double value = iterator.next().doubleValue();
+            sumSquaredDifferences += Math.pow(value - mean, 2);
+            count++;
+        }
+        return sumSquaredDifferences / count;
     }
 
     /**
@@ -48,7 +82,14 @@ public class Statistics {
      * @return
      */
     public int search(double data) {
-        /* TODO */
+        if (this.data instanceof MyArrayList) {
+            MyArrayList sortedList = (MyArrayList) this.data.sortIncreasing();
+            return sortedList.binarySearch(data);
+        } else if (this.data instanceof MyLinkedList) {
+            MyLinkedList sortedList = (MyLinkedList) this.data.sortIncreasing();
+            return sortedList.binarySearch(data);
+        }
+        return -1;
     }
 
     /**
@@ -56,6 +97,29 @@ public class Statistics {
      * @return rank của các phần tử trong list
      */
     public double[] rank() {
-        /* TODO */
+        int size = data.size();
+        double[] values = new double[size];
+        double[] ranks = new double[size];
+
+        // Lưu các giá trị trong mảng values
+        MyIterator iterator = data.iterator(0);
+        int index = 0;
+        while (iterator.hasNext()) {
+            values[index++] = iterator.next().doubleValue();
+        }
+
+        double[] sortedValues = Arrays.copyOf(values, values.length);
+        Arrays.sort(sortedValues);
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (values[i] == sortedValues[j]) {
+                    ranks[i] = j + 1;
+                    break;
+                }
+            }
+        }
+
+        return ranks;
     }
 }
